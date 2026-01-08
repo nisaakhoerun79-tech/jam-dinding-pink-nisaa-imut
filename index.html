@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indonesian Heritage Pink Clock</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fff0f5;
+            --clock-border: #ff85a2;
+            --batik-color: rgba(255, 133, 162, 0.15);
+            --accent-pink: #ff1493;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg-color);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Latar Belakang Pola Batik Mega Mendung Simple */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(var(--batik-color) 2px, transparent 2px);
+            background-size: 30px 30px;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        /* Frame Jam Dinding */
+        .clock {
+            width: 400px;
+            height: 400px;
+            background: white;
+            border: 15px solid var(--clock-border);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(224, 82, 151, 0.3),
+                        inset 0 0 20px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Dekorasi Batik di dalam Jam */
+        .clock::after {
+            content: "INDONESIA";
+            position: absolute;
+            bottom: 80px;
+            letter-spacing: 5px;
+            font-size: 0.8rem;
+            color: var(--clock-border);
+            font-weight: 700;
+        }
+
+        /* Penanda Angka Jawa */
+        .numbers {
+            position: absolute;
+            inset: 20px;
+            transform: rotate(calc(var(--i) * 30deg));
+            text-align: center;
+        }
+
+        .numbers b {
+            display: inline-block;
+            transform: rotate(calc(var(--i) * -30deg));
+            font-family: 'Cinzel', serif;
+            color: var(--accent-pink);
+            font-size: 1.5rem;
+        }
+
+        /* Jarum Jam */
+        .hand {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .hour-hand { width: 220px; height: 220px; z-index: 10; }
+        .min-hand { width: 300px; height: 300px; z-index: 11; }
+        .sec-hand { width: 350px; height: 350px; z-index: 12; }
+
+        .hour-hand::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 100px;
+            background: #444;
+            border-radius: 6px;
+        }
+
+        .min-hand::before {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 140px;
+            background: #666;
+            border-radius: 6px;
+        }
+
+        .sec-hand::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 170px;
+            background: var(--accent-pink);
+            box-shadow: 0 0 10px var(--accent-pink);
+        }
+
+        .center-dot {
+            width: 15px;
+            height: 15px;
+            background: var(--accent-pink);
+            border-radius: 50%;
+            z-index: 100;
+            border: 2px solid white;
+        }
+
+        /* Info Lokasi & Tanggal */
+        .info {
+            position: absolute;
+            top: 450px;
+            text-align: center;
+            color: #e05297;
+        }
+
+        #date {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        #location {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock">
+        <div class="numbers" style="--i:1;"><b>1</b></div>
+        <div class="numbers" style="--i:2;"><b>2</b></div>
+        <div class="numbers" style="--i:3;"><b>3</b></div>
+        <div class="numbers" style="--i:4;"><b>4</b></div>
+        <div class="numbers" style="--i:5;"><b>5</b></div>
+        <div class="numbers" style="--i:6;"><b>6</b></div>
+        <div class="numbers" style="--i:7;"><b>7</b></div>
+        <div class="numbers" style="--i:8;"><b>8</b></div>
+        <div class="numbers" style="--i:9;"><b>9</b></div>
+        <div class="numbers" style="--i:10;"><b>10</b></div>
+        <div class="numbers" style="--i:11;"><b>11</b></div>
+        <div class="numbers" style="--i:12;"><b>12</b></div>
+
+        <div class="center-dot"></div>
+        <div class="hand hour-hand" id="hr"></div>
+        <div class="hand min-hand" id="mn"></div>
+        <div class="hand sec-hand" id="sc"></div>
+    </div>
+
+    <div class="info">
+        <div id="date">KAMIS, 08 JANUARI</div>
+        <div id="location">Waktu Indonesia Barat</div>
+    </div>
+
+    <script>
+        const hr = document.querySelector("#hr");
+        const mn = document.querySelector("#mn");
+        const sc = document.querySelector("#sc");
+
+        function updateClock() {
+            let day = new Date();
+            let hh = day.getHours() * 30;
+            let mm = day.getMinutes() * 6;
+            let ss = day.getSeconds() * 6;
+
+            hr.style.transform = `rotateZ(${hh + (mm/12)}deg)`;
+            mn.style.transform = `rotateZ(${mm}deg)`;
+            sc.style.transform = `rotateZ(${ss}deg)`;
+
+            // Update Tanggal Indonesia
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('date').innerHTML = day.toLocaleDateString('id-ID', options).toUpperCase();
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
